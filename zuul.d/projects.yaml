@@ -1,4 +1,4 @@
 - project:
-  name: openstack-dev/ci-sandbox
-  check:
-    - FusionComputeCI
+  - name: openstack-dev/ci-sandbox
+    check:
+      - FusionComputeCI
