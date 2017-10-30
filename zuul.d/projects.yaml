@@ -1,5 +1,4 @@
 - project:
   name: openstack-dev/ci-sandbox
   check:
-    - jobs:
-        - FusionComputeCI
+    - FusionComputeCI
