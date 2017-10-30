@@ -38,10 +38,8 @@
         Verified: 1
       github:
         status: 'success'
-      mysql:
     failure:
       gerrit:
         Verified: -1
       github:
         status: 'failure'
-      mysql:
