@@ -8,6 +8,17 @@
       initial +/-1 Verified vote.
     manager: independent
     trigger:
+      gerrit:
+        - event: patchset-created
+        - event: change-restored
+        - event: comment-added
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*recheck
+        - event: comment-added
+          require-approval:
+            - Verified: [-1, -2]
+              username: zuul
+          approval:
+            - Workflow: 1
       github:
         - event: pull_request
           action:
@@ -22,73 +33,15 @@
         status: pending
         comment: false
     success:
+      gerrit:
+        # Note that gerrit keywords are case-sensitive.
+        Verified: 1
       github:
         status: 'success'
+      mysql:
     failure:
+      gerrit:
+        Verified: -1
       github:
         status: 'failure'
-
-- pipeline:
-    name: recheck-mitaka
-    description: |
-      Commenting "recheck stable/mitaka" enter this pipeline to run tests on
-      stable/mitaka of OpenStack and receive an initial +/-1 Verified vote.
-    manager: independent
-    trigger:
-      github:
-        - event: pull_request
-          action: comment
-          comment: (?i)^\s*recheck\s+stable\/mitaka\s*$
-    start:
-      github:
-        status: pending
-        comment: false
-    success:
-      github:
-        status: 'success'
-    failure:
-      github:
-        status: 'failure'
-
-- pipeline:
-    name: recheck-pike
-    description: |
-      Commenting "recheck stable/pike" enter this pipeline to run tests on
-      stable/pike of OpenStack and receive an initial +/-1 Verified vote.
-    manager: independent
-    trigger:
-      github:
-        - event: pull_request
-          action: comment
-          comment: (?i)^\s*recheck\s+stable\/pike\s*$
-    start:
-      github:
-        status: pending
-        comment: false
-    success:
-      github:
-        status: 'success'
-    failure:
-      github:
-        status: 'failure'
-
-- pipeline:
-    name: periodic
-    post-review: true
-    description: Jobs in this queue are triggered on a timer.
-    manager: independent
-    precedence: low
-    trigger:
-      timer:
-        - time: '0 6 * * *'
-
-- pipeline:
-    name: merge-check
-    description: >
-      Each time a change merges, this pipeline verifies that all open changes
-      on the same project are still mergeable.
-    failure-message: Build failed (merge-check pipeline).
-    manager: independent
-    ignore-dependencies: true
-    precedence: low
-    trigger: {}
+      mysql:
