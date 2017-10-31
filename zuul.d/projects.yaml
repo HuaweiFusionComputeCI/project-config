@@ -1,5 +1,5 @@
 - project:
-    name: openstack-dev/ci-sandbox
+    name: openstack/nova-fusioncompute
     check:
       jobs:
         - FusionComputeCI
